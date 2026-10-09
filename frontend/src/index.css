@@ -1,33 +1,84 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
-  --color-primary: #6d5df6;
-  --color-secondary: #3b82f6;
-  --color-accent: #06b6d4;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
+  --color-primary: #7562ff;
+  --color-secondary: #4f6bff;
+  --color-accent: #42d9f5;
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-error: #f87171;
 
-  --color-bg-dark: #0b0f19;
-  --color-bg-card: #151a27;
-  --color-bg-light: #f8fafc;
+  --color-bg-dark: #080b16;
+  --color-bg-card: #101629;
+  --color-bg-light: #f7f8fc;
+
+  --animate-float: iv-float 7s ease-in-out infinite;
+  --animate-float-slow: iv-float 9s ease-in-out infinite;
+  --animate-aurora: iv-aurora 18s ease-in-out infinite alternate;
+  --animate-shimmer: iv-shimmer 3.5s linear infinite;
+}
+
+@theme inline {
+  --color-canvas: var(--iv-canvas);
+  --color-surface: var(--iv-surface);
+  --color-surface-2: var(--iv-surface-2);
+  --color-line: var(--iv-line);
+  --color-line-strong: var(--iv-line-strong);
+  --color-ink: var(--iv-ink);
+  --color-muted: var(--iv-muted);
+  --color-subtle: var(--iv-subtle);
+}
+
+:root {
+  --iv-canvas: #f7f8fc;
+  --iv-surface: #ffffff;
+  --iv-surface-2: #f0f2f9;
+  --iv-line: rgba(15, 23, 42, 0.08);
+  --iv-line-strong: rgba(15, 23, 42, 0.14);
+  --iv-ink: #0b1020;
+  --iv-muted: #4b5675;
+  --iv-subtle: #7a84a0;
+  --iv-glow: rgba(117, 98, 255, 0.18);
+  --iv-code-bg: #0d1222;
+  color-scheme: light;
+}
+
+.dark {
+  --iv-canvas: #080b16;
+  --iv-surface: #101629;
+  --iv-surface-2: #171e33;
+  --iv-line: rgba(255, 255, 255, 0.07);
+  --iv-line-strong: rgba(255, 255, 255, 0.13);
+  --iv-ink: #f4f6ff;
+  --iv-muted: #a3aec7;
+  --iv-subtle: #6c7896;
+  --iv-glow: rgba(117, 98, 255, 0.28);
+  --iv-code-bg: #0a0f1f;
+  color-scheme: dark;
 }
 
 html {
-  color-scheme: light dark;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
   font-family: var(--font-sans);
-  @apply bg-[var(--color-bg-light)] text-slate-900 dark:bg-[var(--color-bg-dark)] dark:text-slate-100 transition-colors;
+  background-color: var(--iv-canvas);
+  color: var(--iv-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 #root {
@@ -37,5 +88,177 @@ body {
 }
 
 ::selection {
-  background-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
+  background-color: color-mix(in srgb, var(--color-primary) 35%, transparent);
+}
+
+@utility text-gradient {
+  background-image: linear-gradient(100deg, #8b7bff 0%, #7562ff 35%, #42d9f5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, var(--iv-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--iv-line) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+@utility mask-fade-b {
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 40%, transparent 100%);
+}
+
+@utility hairline-top {
+  background-image: linear-gradient(90deg, transparent, var(--iv-line-strong), transparent);
+}
+
+@utility card-glow {
+  position: relative;
+  isolation: isolate;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(140deg, rgba(117, 98, 255, 0.55), rgba(66, 217, 245, 0.35) 45%, transparent 70%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  &:hover::before,
+  &:focus-visible::before {
+    opacity: 1;
+  }
+}
+
+@keyframes iv-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0);
+  }
+}
+
+@keyframes iv-aurora {
+  0% {
+    transform: translate3d(-6%, -4%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(4%, 3%, 0) scale(1.08);
+  }
+  100% {
+    transform: translate3d(6%, -2%, 0) scale(1.02);
+  }
+}
+
+@keyframes iv-shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes iv-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes iv-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes iv-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+.iv-rise {
+  animation: iv-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.iv-grow {
+  transform-origin: left;
+  animation: iv-grow 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both;
+}
+
+.iv-caret {
+  animation: iv-caret 1s steps(1) infinite;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.code-panel {
+  background: var(--iv-code-bg);
+  color: #d7defa;
+  font-family: var(--font-mono);
+}
+
+.tok-k {
+  color: #c792ea;
+}
+.tok-t {
+  color: #42d9f5;
+}
+.tok-f {
+  color: #82aaff;
+}
+.tok-s {
+  color: #c3e88d;
+}
+.tok-n {
+  color: #f78c6c;
+}
+.tok-c {
+  color: #5c6a8f;
+  font-style: italic;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
 }

@@ -55,7 +55,10 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch {
         tokenStorage.clear();
-        window.location.href = "/login";
+        const errorCode = (error.response?.data as ApiResponse<unknown> | undefined)?.error?.code;
+        if (errorCode !== "LOGIN_REQUIRED") {
+          window.location.href = "/login";
+        }
         return Promise.reject(error);
       }
     }

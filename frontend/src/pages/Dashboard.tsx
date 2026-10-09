@@ -1,15 +1,38 @@
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { fetchBookmarkSummary, fetchProgressSummary } from "@/lib/progressApi";
 import { Card, CardBody, CardTitle } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 
-const widgets = [
-  { label: "Topics completed", value: "0", tone: "primary" as const },
-  { label: "Current streak", value: "0 days", tone: "success" as const },
-  { label: "Bookmarked topics", value: "0", tone: "neutral" as const },
-];
-
 export function Dashboard() {
   const { user } = useAuth();
+  const [completedCount, setCompletedCount] = useState(0);
+  const [bookmarkedCount, setBookmarkedCount] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    Promise.all([fetchProgressSummary(), fetchBookmarkSummary()])
+      .then(([progress, bookmarks]) => {
+        if (!cancelled) {
+          setCompletedCount(progress.completedCount);
+          setBookmarkedCount(bookmarks.count);
+        }
+      })
+      .catch(() => {
+        // dashboard widgets just stay at their defaults if this fails
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const widgets = [
+    { label: "Topics completed", value: String(completedCount), tone: "primary" as const },
+    { label: "Current streak", value: "0 days", tone: "success" as const },
+    { label: "Bookmarked topics", value: String(bookmarkedCount), tone: "neutral" as const },
+  ];
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">

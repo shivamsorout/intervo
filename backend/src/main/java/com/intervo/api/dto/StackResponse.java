@@ -8,9 +8,11 @@ public record StackResponse(
         String name,
         String description,
         String icon,
-        int sortOrder
+        int sortOrder,
+        String status,
+        String trackType
 ) {
     public static StackResponse from(Stack stack) {
-        return new StackResponse(stack.getId(), stack.getSlug(), stack.getName(), stack.getDescription(), stack.getIcon(), stack.getSortOrder());
+        return new StackResponse(stack.getId(), stack.getSlug(), stack.getName(), stack.getDescription(), stack.getIcon(), stack.getSortOrder(), stack.getStatus().name(), stack.getTrackType().name());
     }
 }

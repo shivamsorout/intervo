@@ -39,4 +39,14 @@ public class Stack {
     @Column(name = "created_at", nullable = false, updatable = false)
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private TrackStatus status = TrackStatus.PLANNED;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "track_type", nullable = false)
+    @Builder.Default
+    private TrackType trackType = TrackType.LANGUAGE;
 }

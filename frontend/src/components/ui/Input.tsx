@@ -6,25 +6,31 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string;
 }
 
+export const inputBaseClasses = cn(
+  "h-11 w-full rounded-xl border border-line-strong bg-surface px-3.5 text-sm text-ink outline-none transition-all duration-200",
+  "placeholder:text-subtle",
+  "hover:border-ink/20",
+  "focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary)]/15",
+  "dark:bg-surface-2/60",
+);
+
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, label, error, id, ...props }, ref) => {
     const inputId = id ?? props.name;
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={inputId} className="text-sm font-medium text-slate-700 dark:text-slate-300">
+          <label htmlFor={inputId} className="text-sm font-medium text-ink/90">
             {label}
           </label>
         )}
         <input
           ref={ref}
           id={inputId}
+          aria-invalid={error ? true : undefined}
           className={cn(
-            "h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none transition-colors",
-            "placeholder:text-slate-400",
-            "focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20",
-            "dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:placeholder:text-slate-500",
-            error && "border-[var(--color-error)] focus:border-[var(--color-error)] focus:ring-[var(--color-error)]/20",
+            inputBaseClasses,
+            error && "border-[var(--color-error)] focus:border-[var(--color-error)] focus:ring-[var(--color-error)]/15",
             className,
           )}
           {...props}

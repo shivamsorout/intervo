@@ -58,4 +58,8 @@ public class ContentUnit {
     @Column(name = "updated_at", nullable = false)
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+    @Column(name = "is_free_preview", nullable = false)
+    @Builder.Default
+    private boolean isFreePreview = false;
 }
